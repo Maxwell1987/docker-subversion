@@ -3,10 +3,13 @@ MAINTAINER MarvAmBass
 
 ENV LANG C.UTF-8
 
-RUN apt-get update && apt-get install -y \
-    subversion \
-    libapache2-svn \
-    apache2-mpm-prefork
+RUN apt-get update \
+    && apt-get install -y \
+        subversion \
+        libapache2-svn \
+        apache2-mpm-prefork \
+        apache2-utils \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod dav_svn
 RUN a2enmod auth_digest
@@ -28,4 +31,4 @@ RUN echo "0 0 * * *	root    /usr/local/bin/svn-backuper.sh" >> /etc/crontab
 
 RUN sed -i 's/# exec CMD/&\nsvn-entrypoint.sh/g' /opt/entrypoint.sh
 
-VOLUME ["/var/local/svn", "/var/svn-backup", "/etc/apache/dav_svn"]
+VOLUME ["/var/local/svn", "/var/svn-backup", "/etc/apache2/dav_svn"]
